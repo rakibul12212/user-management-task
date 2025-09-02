@@ -63,7 +63,7 @@ const UserManagement = () => {
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
             />
-            <span className="relative flex items-center gap-2 z-10">
+            <span className="relative flex justify-center items-center gap-2 z-10">
               Search
             </span>
           </motion.button>
