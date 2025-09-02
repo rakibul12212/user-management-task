@@ -14,8 +14,8 @@ const UserManagement = () => {
     <div className="bg-white border border-gray-100 shadow-sm rounded-lg p-6">
       <p className="text-2xl md:text-3xl font-semibold">User Management</p>
 
-      <div className="pt-8">
-        <div className="flex">
+      <div className="pt-8 ">
+        <div className="flex flex-col md:flex-row gap-2">
           <input
             type="search"
             placeholder="Search by name or email"
@@ -25,7 +25,7 @@ const UserManagement = () => {
           />
           <button
             onClick={handleSearch}
-            className="ml-2 px-8 py-2 rounded-xl bg-blue-500/70 border border-white/30 backdrop-blur-md shadow-lg shadow-black/20  text-white font-medium hover:bg-blue-500/90 hover:shadow-xl  active:shadow-inner transition-all duration-300"
+            className=" px-8 py-2 rounded-xl bg-blue-500/70 border border-white/30 backdrop-blur-md shadow-lg shadow-black/20  text-white font-medium hover:bg-blue-500/90 hover:shadow-xl  active:shadow-inner transition-all duration-300"
           >
             Search
           </button>
