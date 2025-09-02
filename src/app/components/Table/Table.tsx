@@ -5,13 +5,32 @@ import { useRouter } from "next/navigation";
 import { User } from "../type/Type";
 
 interface TableProps {
-  search: string; 
+  search: string;
 }
 
 const Table: React.FC<TableProps> = ({ search }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5;
   const router = useRouter();
+
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -22,59 +41,93 @@ const Table: React.FC<TableProps> = ({ search }) => {
     fetchData();
   }, []);
 
-  
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase()),
-  );
-
   return (
     <div style={{ overflowX: "auto" }}>
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ background: "#fafbfc" }}>
-              <th style={{ textAlign: "left", padding: "12px" }}>NAME</th>
-              <th style={{ textAlign: "left", padding: "12px" }}>EMAIL</th>
-              <th style={{ textAlign: "left", padding: "12px" }}>PHONE</th>
-              <th style={{ textAlign: "left", padding: "12px" }}>COMPANY</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map((user) => (
-                <tr
-                  key={user.username}
-                  className="hover:bg-gray-50 cursor-pointer"
-                  onClick={() => router.push(`/user/${user.username}`)}
-                  style={{ borderBottom: "1px solid #eee" }}
-                >
-                  <td style={{ padding: "12px" }}>
-                    <div>
-                      <div>{user.name}</div>
-                      <div style={{ color: "#888" }}>@{user.username}</div>
-                    </div>
-                  </td>
-                  <td style={{ padding: "12px" }}>{user.email}</td>
-                  <td style={{ padding: "12px" }}>{user.phone}</td>
-                  <td style={{ padding: "12px" }}>{ user.company.name}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan={4}
-                  style={{ padding: "12px", textAlign: "center" }}
-                >
-                  No  users found.
-                </td>
+        <>
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="text-left p-3">NAME</th>
+                <th className="text-left p-3">EMAIL</th>
+                <th className="text-left p-3">PHONE</th>
+                <th className="text-left p-3">COMPANY</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {currentUsers.length > 0 ? (
+                currentUsers.map((user) => (
+                  <tr
+                    key={user.username}
+                    className="hover:bg-gray-100 cursor-pointer border-b border-gray-200"
+                    onClick={() => router.push(`/user/${user.username}`)}
+                  >
+                    <td className="p-3">
+                      <div>
+                        <div>{user.name}</div>
+                        <div className="text-gray-500">@{user.username}</div>
+                      </div>
+                    </td>
+                    <td className="p-3">{user.email}</td>
+                    <td className="p-3">{user.phone}</td>
+                    <td className="p-3">{user.company.name}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="p-3 text-center text-gray-500">
+                    No users found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+
+          {filteredUsers.length > 0 && (
+            <div className="flex  items-center mt-4 space-x-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 border border-gray-300 rounded disabled:opacity-50"
+              >
+                Prev
+              </button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`px-3 py-1 border border-gray-300 rounded ${
+                      page === currentPage ? "bg-gray-200 font-bold" : ""
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ),
+              )}
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 border border-gray-300 rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+              <p className="ps-5 hidden md:block">
+                showing{" "}
+                {filteredUsers.length === 0
+                  ? 0
+                  : `${indexOfFirstUser + 1}-${
+                      indexOfFirstUser + currentUsers.length
+                    }`}{" "}
+                of {filteredUsers.length} users
+              </p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

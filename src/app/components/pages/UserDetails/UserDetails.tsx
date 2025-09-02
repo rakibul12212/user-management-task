@@ -22,7 +22,7 @@ export default function UserDetails({ user }: Props) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-gray-100 p-5 rounded-xl shadow-sm">
+        <div className="bg-gray-50 p-5 rounded-xl ">
           <h2 className="text-2xl font-semibold mb-4">Personal Information</h2>
           <div className="space-y-3">
             <div>
@@ -62,7 +62,7 @@ export default function UserDetails({ user }: Props) {
           </div>
         </div>
 
-        <div className="bg-gray-100 p-5 rounded-xl shadow-sm">
+        <div className="bg-gray-50 p-5 rounded-xl ">
           <h2 className="text-2xl font-semibold mb-4">Address</h2>
           <div className="space-y-3">
             <div>
@@ -99,7 +99,7 @@ export default function UserDetails({ user }: Props) {
         </div>
       </div>
 
-      <div className="bg-gray-100 p-5 rounded-xl shadow-sm">
+      <div className="bg-gray-50 p-5 rounded-xl ">
         <h2 className="text-2xl font-semibold mb-4">Company</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div>
