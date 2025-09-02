@@ -1,56 +1,35 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { getUsers } from "@/app/lib/api";
-import { useRouter } from "next/navigation";
-import { HiOutlineArrowLongLeft } from "react-icons/hi2";
-import { User } from "@/app/components/type/Type";
 import Link from "next/link";
+import { HiOutlineArrowLongLeft } from "react-icons/hi2";
+import { getUsers } from "@/app/lib/api";
+import { User } from "@/app/components/type/Type";
 
- type PageProps = {
+type PageProps = {
   params: { userName: string };
 };
 
-export default function Page({ params }: PageProps) {
-  const router = useRouter();
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+export default async function UserDetailsPage({ params }: PageProps) {
+  const users: User[] = await getUsers();
+  const user = users.find((u) => u.username === params.userName);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const data = await getUsers();
-        setUsers(data);
-      } catch (error) {
-        console.error("Failed to load users:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUsers();
-  }, []);
-
-  if (loading)
-    return <div className="text-center mt-10">Loading user details...</div>;
-
-  const user = users.find((user) => user.username === params.userName);
-
-  if (!user) return <div className="text-center mt-10">User not found.</div>;
+  if (!user) {
+    return <div className="text-center mt-10">User not found.</div>;
+  }
 
   return (
-    <div className="p-4 md:p-8 space-y-6 ">
+    <div className="p-4 md:p-8 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <button
+        <Link
+          href="/"
           className="flex items-center gap-2 px-3 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
-          onClick={() => router.push("/")}
         >
           <HiOutlineArrowLongLeft className="w-5 h-5" />
           Back to Users
-        </button>
+        </Link>
         <h1 className="text-2xl md:text-3xl font-semibold">User Details</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
         <div className="bg-gray-200 p-5 rounded-lg shadow-sm">
           <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
           <div className="space-y-3">
@@ -83,6 +62,7 @@ export default function Page({ params }: PageProps) {
           </div>
         </div>
 
+        
         <div className="bg-gray-200 p-5 rounded-lg shadow-sm">
           <h2 className="text-xl font-semibold mb-4">Address</h2>
           <div className="space-y-3">
@@ -120,6 +100,7 @@ export default function Page({ params }: PageProps) {
         </div>
       </div>
 
+      
       <div className="bg-gray-200 p-5 rounded-lg shadow-sm">
         <h2 className="text-xl font-semibold mb-4">Company</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -143,7 +124,4 @@ export default function Page({ params }: PageProps) {
       </div>
     </div>
   );
-};
-
-
-
+}
