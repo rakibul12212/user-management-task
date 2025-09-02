@@ -2,18 +2,29 @@
 import { User } from "@/app/components/type/Type";
 import Link from "next/link";
 import { HiOutlineArrowLongLeft } from "react-icons/hi2";
+import { motion } from "framer-motion";
 
 type Props = { user?: User };
 
 export default function UserDetails({ user }: Props) {
   if (!user) return <div className="text-center mt-10">User not found.</div>;
 
+  
+  const slideInLeft = {
+    hidden: { opacity: 0, x: -50 },
+    visible: (custom: number) => ({
+      opacity: 1,
+      x: 0,
+      transition: { delay: custom * 0.2, duration: 0.5 },
+    }),
+  };
+
   return (
     <div className="p-4 md:p-8 space-y-6 bg-white rounded-xl">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <Link
           href="/"
-          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-400 backdrop-blur-md shadow-lg shadow-black/20 text-white hover:bg-gray-500 transition-all duration-300"
         >
           <HiOutlineArrowLongLeft className="w-5 h-5" />
           Back to Users
@@ -21,8 +32,16 @@ export default function UserDetails({ user }: Props) {
         <h1 className="text-2xl md:text-3xl font-semibold">User Details</h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-gray-50 p-5 rounded-xl ">
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div
+          className="bg-gray-50 backdrop-blur-md border border-white/30 rounded-xl p-5 shadow-md shadow-black/20"
+          custom={0}
+          variants={slideInLeft}
+        >
           <h2 className="text-2xl font-semibold mb-4">Personal Information</h2>
           <div className="space-y-3">
             <div>
@@ -60,9 +79,13 @@ export default function UserDetails({ user }: Props) {
               </Link>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="bg-gray-50 p-5 rounded-xl ">
+        <motion.div
+          className="bg-gray-50 backdrop-blur-md border border-white/30 rounded-xl p-5 shadow-md shadow-black/20"
+          custom={1}
+          variants={slideInLeft}
+        >
           <h2 className="text-2xl font-semibold mb-4">Address</h2>
           <div className="space-y-3">
             <div>
@@ -96,10 +119,16 @@ export default function UserDetails({ user }: Props) {
               </span>
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      <div className="bg-gray-50 p-5 rounded-xl ">
+      <motion.div
+        className="bg-gray-50 backdrop-blur-md border border-white/30 rounded-xl p-5 shadow-md shadow-black/20"
+        custom={2}
+        variants={slideInLeft}
+        initial="hidden"
+        animate="visible"
+      >
         <h2 className="text-2xl font-semibold mb-4">Company</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div>
@@ -121,7 +150,7 @@ export default function UserDetails({ user }: Props) {
             </span>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

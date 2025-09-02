@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { getUsers } from "../../lib/api";
 import { useRouter } from "next/navigation";
 import { User } from "../type/Type";
+import { motion } from "framer-motion";
 
 interface TableProps {
   search: string;
@@ -27,9 +28,7 @@ const Table: React.FC<TableProps> = ({ search }) => {
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
   const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
 
   useEffect(() => {
@@ -41,6 +40,20 @@ const Table: React.FC<TableProps> = ({ search }) => {
     fetchData();
   }, []);
 
+  const rowVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const cellVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  };
+
   return (
     <div style={{ overflowX: "auto" }}>
       {loading ? (
@@ -49,7 +62,7 @@ const Table: React.FC<TableProps> = ({ search }) => {
         <>
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-gray-50">
+              <tr className="bg-gray-50 backdrop-blur-md shadow-sm shadow-black/10 rounded-lg text-gray-400 text-sm">
                 <th className="text-left p-3">NAME</th>
                 <th className="text-left p-3">EMAIL</th>
                 <th className="text-left p-3">PHONE</th>
@@ -59,21 +72,30 @@ const Table: React.FC<TableProps> = ({ search }) => {
             <tbody>
               {currentUsers.length > 0 ? (
                 currentUsers.map((user) => (
-                  <tr
+                  <motion.tr
                     key={user.username}
                     className="hover:bg-gray-100 cursor-pointer border-b border-gray-200"
                     onClick={() => router.push(`/user/${user.username}`)}
+                    variants={rowVariants}
+                    initial="hidden"
+                    animate="visible"
                   >
-                    <td className="p-3">
+                    <motion.td className="p-3" variants={cellVariants}>
                       <div>
                         <div>{user.name}</div>
                         <div className="text-gray-500">@{user.username}</div>
                       </div>
-                    </td>
-                    <td className="p-3">{user.email}</td>
-                    <td className="p-3">{user.phone}</td>
-                    <td className="p-3">{user.company.name}</td>
-                  </tr>
+                    </motion.td>
+                    <motion.td className="p-3" variants={cellVariants}>
+                      {user.email}
+                    </motion.td>
+                    <motion.td className="p-3" variants={cellVariants}>
+                      {user.phone}
+                    </motion.td>
+                    <motion.td className="p-3" variants={cellVariants}>
+                      {user.company.name}
+                    </motion.td>
+                  </motion.tr>
                 ))
               ) : (
                 <tr>
@@ -86,11 +108,11 @@ const Table: React.FC<TableProps> = ({ search }) => {
           </table>
 
           {filteredUsers.length > 0 && (
-            <div className="flex  items-center mt-4 space-x-2">
+            <div className="flex items-center mt-4 space-x-2">
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-3 py-1 border border-gray-300 rounded disabled:opacity-50"
+                className="px-3 py-1 rounded border border-gray-300 shadow-md bg-white/10 backdrop-blur-md black hover:bg-white/20 transition-all duration-300 disabled:opacity-40"
               >
                 Prev
               </button>
@@ -100,8 +122,8 @@ const Table: React.FC<TableProps> = ({ search }) => {
                   <button
                     key={page}
                     onClick={() => handlePageChange(page)}
-                    className={`px-3 py-1 border border-gray-300 rounded ${
-                      page === currentPage ? "bg-gray-200 font-bold" : ""
+                    className={`px-3 py-1 rounded border border-gray-300 shadow-md bg-white/10 backdrop-blur-md black hover:bg-white/20 transition-all duration-300 ${
+                      page === currentPage ? "bg-white/20 font-bold" : ""
                     }`}
                   >
                     {page}
@@ -112,10 +134,11 @@ const Table: React.FC<TableProps> = ({ search }) => {
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 border border-gray-300 rounded disabled:opacity-50"
+                className="px-3 py-1 rounded border border-gray-300 shadow-md bg-white/10 backdrop-blur-md black hover:bg-white/20 transition-all duration-300 disabled:opacity-40"
               >
                 Next
               </button>
+
               <p className="ps-5 hidden md:block">
                 showing{" "}
                 {filteredUsers.length === 0
