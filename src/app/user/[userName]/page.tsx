@@ -7,11 +7,11 @@ import { HiOutlineArrowLongLeft } from "react-icons/hi2";
 import { User } from "@/app/components/type/Type";
 import Link from "next/link";
 
-interface Props {
+ type PageProps = {
   params: { userName: string };
-}
+};
 
-const UserDetails = ({ params }: Props) => {
+export default function Page({ params }: PageProps) {
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -144,8 +144,6 @@ const UserDetails = ({ params }: Props) => {
     </div>
   );
 };
-
-export default UserDetails;
 
 
 

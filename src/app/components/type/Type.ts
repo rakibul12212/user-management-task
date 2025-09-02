@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type Geo = {
   lat: string;
   lng: string;
@@ -26,4 +28,12 @@ export type User = {
   phone: string;
   website: string;
   company: Company;
+};
+
+
+
+// container
+export type ContainerProps = {
+  children: ReactNode;
+  className?: string;
 };

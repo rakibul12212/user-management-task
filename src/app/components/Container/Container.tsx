@@ -1,9 +1,5 @@
-import { ReactNode } from "react";
 
-type ContainerProps = {
-  children: ReactNode;
-  className?: string;
-};
+import { ContainerProps } from "../type/Type";
 
 export const Container = ({ children, className = "" }: ContainerProps) => {
   return (
