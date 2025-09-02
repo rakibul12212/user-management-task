@@ -9,13 +9,12 @@ type Props = { user?: User };
 export default function UserDetails({ user }: Props) {
   if (!user) return <div className="text-center mt-10">User not found.</div>;
 
-  
   const slideInLeft = {
     hidden: { opacity: 0, x: -50 },
     visible: (custom: number) => ({
       opacity: 1,
       x: 0,
-      transition: { delay: custom * 0.2, duration: 0.5 },
+      transition: { delay: custom * 0.2, duration: 0.9 },
     }),
   };
 

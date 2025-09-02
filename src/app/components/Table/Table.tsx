@@ -4,6 +4,7 @@ import { getUsers } from "../../lib/api";
 import { useRouter } from "next/navigation";
 import { User } from "../type/Type";
 import { motion } from "framer-motion";
+import Loading from "@/app/loading";
 
 interface TableProps {
   search: string;
@@ -30,6 +31,7 @@ const Table: React.FC<TableProps> = ({ search }) => {
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
+  
 
   useEffect(() => {
     async function fetchData() {
@@ -51,13 +53,13 @@ const Table: React.FC<TableProps> = ({ search }) => {
 
   const cellVariants = {
     hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
   return (
     <div style={{ overflowX: "auto" }}>
       {loading ? (
-        <div>Loading...</div>
+        <Loading />
       ) : (
         <>
           <table className="w-full border-collapse">
